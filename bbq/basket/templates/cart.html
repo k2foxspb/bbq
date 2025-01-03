@@ -1,0 +1,68 @@
+
+{% extends 'base_basket.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <h1>Ваша корзина</h1>
+
+        {% if cart_items %}
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
+                    <th>Общая</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in cart_items %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'basket:product_detail' item.product.id %}"
+                               style="text-decoration: none; color: black;">
+                                {{ item.product.name }}
+                            </a>
+                            <br>
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="50"
+                                     height="50" class="img-thumbnail">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="{% url 'basket:update_cart' item.product.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="button" value="-" class="decrement btn btn-sm btn-danger"
+                                       data-quantity="{{ item.quantity }}" data-product="{{ item.product.id }}">
+                                <span>{{ item.quantity }}</span>
+                                <input type="button" value="+" class="increment btn btn-sm btn-success"
+                                       data-quantity="{{ item.quantity }}" data-product="{{ item.product.id }}">
+                                <input type="hidden" name="new_quantity" value="{{ item.quantity }}">
+                            </form>
+                        </td>
+                        <td>{{ item.product.price }}руб.</td>
+                        <td>{{ item.total_price }}руб.</td>
+                        <td><a href="{% url 'basket:remove_from_cart' item.product.id %}" class="btn btn-danger btn-sm">удалить</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="4"><b>Общая сумма :{{ total_price }} руб</b></td>
+                    <td></td>
+                </tr>
+                </tfoot>
+            </table>
+            <a href="{% url 'basket:product_list' %}" class="btn btn-primary">Продолжить покупки</a>
+            <a href="{% url 'basket:show_checkout_form' %}" class="btn btn-primary">Оформить заказ</a>
+
+        {% else %}
+            <p>Ваша карта пуста</p>
+        {% endif %}
+    </div>
+
+    <script src="{% static 'js/cart_update.js' %}"></script> <!-- Add script tag -->
+{% endblock %}

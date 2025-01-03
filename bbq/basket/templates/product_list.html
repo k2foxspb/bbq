@@ -1,0 +1,41 @@
+{% extends 'base_basket.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h1 class="text-center">Шашлычок</h1>
+            {% if cart_count > 0 %}
+                <a class="basket"
+                   href="{% url 'basket:cart_detail' %}" id="cart-link">
+                    <img style="position: relative; top: 20%;" src="{% static 'img/basket-fill.svg' %}" alt="basket-fill">
+                    <div style="position: relative;top: -45%; left: 45%;font-family: 'Roboto', Arial, sans-serif; font-weight: bold">{{ cart_count }}</div>
+
+                </a>
+            {% endif %}
+            {% for product in products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <a href="{% url 'basket:product_detail' product.id %}" class="btn btn-primary">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                     class="card-img-top img-fluid img-thumbnail"
+                                     style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                        </a>
+                        <div class="card-body" >
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                            <p class="card-text">Цена: {{ product.price }} руб.</p>
+                            <form method="post" action="{% url 'basket:add_to_cart' product.id %}"
+                                  data-product-id="{{ product.id }}" class="add-to-cart-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+{% endblock %}

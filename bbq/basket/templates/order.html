@@ -1,0 +1,12 @@
+{% extends 'base_basket.html' %}  <!-- Assuming you have a base template -->
+
+{% load static %}
+
+{% block content %}
+    <form method="post" action="{% url 'basket:checkout' %}">
+        {% csrf_token %}
+   {{ form.as_p }}
+    <input type="hidden" name="cart" value="{{ request.session.cart_id }}">
+    <button type="submit">Submit</button>
+</form>
+{% endblock %}

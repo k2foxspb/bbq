@@ -1,0 +1,20 @@
+{% extends 'base_basket.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid img-thumbnail"
+                     style="height: 300px; object-fit: cover;">
+            </div>
+            <div class="col-md-6">
+                <h2>{{ product.name }}</h2>
+                <p class="lead">{{ product.description }}</p>
+                <p><strong>Цена</strong> {{ product.price }}руб.</p>
+                <!-- Add other details as needed -->
+                <a href="{% url 'basket:add_to_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

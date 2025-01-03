@@ -1,0 +1,108 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/basket.css' %}">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            background-color: #212529;
+            color: #d3d3d3;
+            font-family: sans-serif;
+        / Improved font /
+        }
+
+        .card {
+            background-color: #212529;
+            border-color: #080909;
+            border-width: 3px;
+            border-radius: 10px;
+            color: #ededee;
+        / Rounded corners / box-shadow: 0 4 px 8 px rgba(0, 0, 0, 0.1);
+        / Subtle shadow / overflow: hidden;
+        / Hide overflowing content /
+        }
+
+        .card-img-top {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        a:link {
+            color: #d3d1d1;
+        }
+
+        a:visited {
+            color: #e7e7e8;
+        }
+
+        .btn-primary {
+            background-color: #2a2e2b;
+            border-color: #353936;
+            border-radius: 5px;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            border-radius: 5px;
+        }
+
+        .btn-secondary {
+            background-color: #5858FA;
+            border-color: #5858FA;
+            border-radius: 5px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        / Enable horizontal scrolling for the table /
+        }
+
+
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'basket:product_list' %}">Каталог</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'basket:product_list' %}">Каталог</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">О нас</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Логин</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% block content %}{% endblock %}
+<div class="container mt-4">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+<script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+<script src="{% static 'js/cart_update.js' %}"></script>
+</body>
+</html>

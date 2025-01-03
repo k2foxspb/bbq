@@ -1,0 +1,11 @@
+{% extends 'base_basket.html' %}
+
+
+{% block content %}
+  <h1>Ваш заказ успешно оформлен</h1>
+  <p>Спасибо за ваш заказ. Мы свяжемся с вами в ближайшее время.</p>
+  <a href="{% url 'basket:product_list' %}">На главную</a>
+
+{% endblock %}
+
+
