@@ -2,7 +2,7 @@ from os import environ
 
 import telebot
 from telebot import apihelper
-bot = telebot.TeleBot('7013936598:AAG9HKVZoltQnDfoz0UAUJoziWOrgm-FhA0')
+bot = telebot.TeleBot('8010937064:AAE35qP4DLE00VwyGpmb8nbDjSb3y4qQunk')
 
 # from telebot import types
 def send_message(message):
