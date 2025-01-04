@@ -229,6 +229,7 @@ def checkout(request):
 
             order.shipping_address = cleaned_data.get('shipping_address', '').strip()
             order.phone_number = cleaned_data.get('phone_number', '').strip()
+            order.message = cleaned_data.get('message', '').strip()
             order.total_price = cart.total_price
             order.status = 'Ожидается'  # Initialize status
 
@@ -237,11 +238,12 @@ def checkout(request):
             except Exception as e: print(e)
             send_message(
                f'Имя: {order.user}\n'
-               f'Номер заказа: {order.pk} '
+               f'Номер заказа: {order.pk}\n '
                f'Телефон: {order.phone_number}\n'
                f'Адрес: {order.shipping_address}\n'
                f'заказ: {order_items_string}\n'
-               f'Общая сумма{cart.total_price}'
+               f'Общая сумма {cart.total_price}руб\n'
+               f'Дополнительная информация'
             )
             cart.delete()
 

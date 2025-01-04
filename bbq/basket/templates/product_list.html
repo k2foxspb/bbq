@@ -14,7 +14,7 @@
             {% if categories %}
                 {% for category, products_in_category in products_by_category.items %}
                     <div class="category-container">
-                        <h2>{{ category.name }}</h2>
+                        <h2 style="text-align: center">{{ category.name }}</h2>
                         <div class="row">
                             {% for product in products_in_category %}
                                 <div class="col-md-4 mb-4">

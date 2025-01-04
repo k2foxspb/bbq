@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block content %}
+
     <form method="post" action="{% url 'basket:checkout' %}">
         {% csrf_token %}
    {{ form.as_p }}
@@ -11,6 +12,7 @@
         {% else %}
             <p>Error: No cart found. Please add items to your cart first.</p>
         {% endif %}
-    <button type="submit">Submit</button>
+    <p> Нажимая кнопку 'подтвердить заказ' вы соглашаетесь на обработку ваших данных</p>
+    <button type="submit">Подтвердить заказ</button>
 </form>
 {% endblock %}
