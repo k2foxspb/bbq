@@ -6,7 +6,11 @@
     <form method="post" action="{% url 'basket:checkout' %}">
         {% csrf_token %}
    {{ form.as_p }}
-    <input type="hidden" name="cart" value="{{ request.session.cart_id }}">
+     {% if request.session.cart_id %}
+            <input type="hidden" name="cart" value="{{ request.session.cart_id }}">
+        {% else %}
+            <p>Error: No cart found. Please add items to your cart first.</p>
+        {% endif %}
     <button type="submit">Submit</button>
 </form>
 {% endblock %}

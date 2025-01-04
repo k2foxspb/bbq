@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from basket.models import Product, Order, Cart, CartItem
+from basket.models import Product, Order, Cart, CartItem, Category
 
 
 # Register your models here.
@@ -21,4 +21,8 @@ class CartAdmin(admin.ModelAdmin):
 
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
+    search_fields = ('__all__',)
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('__all__',)

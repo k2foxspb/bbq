@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 
 from .forms import OrderForm
-from .models import Product, Cart, CartItem, Order
+from .models import Product, Cart, CartItem, Order, Category
 from .telegram import send_message
 
 
@@ -17,28 +17,36 @@ def product_detail(request, product_id):
 
 
 def product_list(request):
-    products = Product.objects.all()
+    categories = Category.objects.all()  # Fetch all categories
+    products = Product.objects.all()  # Fetch all products
+
     try:
         if request.user.is_authenticated:
             cart = Cart.objects.get(user=request.user)
         else:
-            cart_id = request.session.get('cart_id')  # Check for session cart
+            cart_id = request.session.get('cart_id')
             if cart_id is None:
                 cart = Cart.objects.create()
                 request.session['cart_id'] = cart.id
             else:
                 cart = Cart.objects.get(id=cart_id)
     except Cart.DoesNotExist:
-        # Handle case where a cart with the session ID does not exist.
         cart = Cart.objects.create()
         if request.user.is_authenticated:
             cart.user = request.user
             cart.save()
         request.session['cart_id'] = cart.id
+
     cart_items = cart.items.all()
     cart_count = sum(item.quantity for item in cart_items)
-    # cart_count = request.session.get('cart_count', 0)
-    return render(request, 'product_list.html', {'products': products, 'cart_count': cart_count})
+
+    # Now, group products by category
+    products_by_category = {}
+    for category in categories:
+        products_in_category = Product.objects.filter(category=category)
+        products_by_category[category] = products_in_category
+
+    return render(request, 'product_list.html', {'products': products, 'cart_count': cart_count, 'categories': categories, 'products_by_category': products_by_category})
 
 
 def add_to_cart(request, product_id):
@@ -163,36 +171,29 @@ def cart_detail(request):
 logger = logging.getLogger(__name__)
 
 
+
 def show_checkout_form(request):
     try:
-        # Check if a cart exists in the session.
-        cart_id = request.session.get('cart_id')
-
-        # If the cart_id exists and is valid, retrieve the cart.
-        if cart_id:
-            cart = Cart.objects.get(pk=cart_id)
-        else:  # If no cart_id, create a new one for the logged-in user.
-            if request.user.is_authenticated:
-                try:
-                    cart = Cart.objects.get(user=request.user)
-                except Cart.DoesNotExist:
-                    cart = Cart.objects.create(user=request.user)
-                    request.session['cart_id'] = cart.id
+        if request.user.is_authenticated:
+            cart, created = Cart.objects.get_or_create(user=request.user)
+        else:
+            cart_id = request.session.get('cart_id')
+            if cart_id:
+                cart = Cart.objects.get(pk=cart_id)
             else:
                 messages.error(request, "Ошибка: Корзина не найдена. Пожалуйста, добавьте товары в корзину.")
-                return redirect('basket:cart_detail')  # Redirect to the cart page
+                return redirect('basket:cart_detail')  # Corrected redirect
 
+        if not cart.items.exists():
+            messages.warning(request, "Ваша корзина пуста. Пожалуйста, добавьте товары.")
+            return redirect('basket:product_list')
+
+        form = OrderForm(initial={'cart': cart.id})
+        return render(request, 'order.html', {'form': form})
 
     except Cart.DoesNotExist:
         messages.error(request, "Ошибка: Корзина не найдена. Пожалуйста, добавьте товары в корзину.")
-        return redirect('basket:cart_detail')  # Redirect to the cart page
-
-    if not cart.items.exists():
-        messages.warning(request, "Ваша корзина пуста. Пожалуйста, добавьте товары.")
-        return redirect('basket:cart_detail')
-
-    form = OrderForm(initial={'cart': cart.id})
-    return render(request, 'order.html', {'form': form})
+        return redirect('basket:product_list')
 
 
 @require_POST
@@ -201,29 +202,26 @@ def checkout(request):
         form = OrderForm(request.POST)
         if form.is_valid():
             try:
-                cart = Cart.objects.get(pk=request.POST.get('cart'))
+                if request.user.is_authenticated:
+                    cart = Cart.objects.get(user=request.user)
+                else:
+                    cart_id = request.session.get('cart_id')
+                    if not cart_id:
+                        messages.error(request, "Ошибка: Корзина не найдена. Пожалуйста, добавьте товары.")
+                        return redirect('basket:show_checkout_form')
+                    cart = Cart.objects.get(pk=cart_id)
             except Cart.DoesNotExist:
+
                 messages.error(request, "Ошибка: Корзина не найдена.")
                 return redirect('basket:show_checkout_form')
-
             if not cart.items.exists():
-                messages.error(request, "Ваша корзина пуста. Пожалуйста, добавьте товары.")
+                messages.error(request, "Ваша корзина пуста.")
                 return redirect('basket:show_checkout_form')
             cleaned_data = form.cleaned_data
 
-            ord = str()
-            for item in cart.items.all():
-                ord += f'{item.product.name}: {item.quantity} шт || '
-            print(ord)
-
-            # Order.objects.create(user=request.user if request.user.is_authenticated else None,
-            #                     products=ord,
-            #                     status='pending',
-            #                     total_price=cart.total_price,
-            #                     shipping_address=cleaned_data.get('shipping_address', '').strip(),
-            #                     phone_number=cleaned_data.get('phone_number', '').strip(),
-            #                     )
-
+            order_items_string = ", ".join(
+                [f"{item.product.name}: {item.quantity} шт" for item in cart.items.all()]
+            )
             order = form.save(commit=False)
 
             order.user = request.user if request.user.is_authenticated else None
@@ -233,18 +231,20 @@ def checkout(request):
             order.phone_number = cleaned_data.get('phone_number', '').strip()
             order.total_price = cart.total_price
             order.status = 'Ожидается'  # Initialize status
-            print(Order.objects.all())
-            order.save()
 
+            try:
+                order.save()
+            except Exception as e: print(e)
             send_message(
                f'Имя: {order.user}\n'
                f'Номер заказа: {order.pk} '
                f'Телефон: {order.phone_number}\n'
                f'Адрес: {order.shipping_address}\n'
-               f'заказ: {ord}\n'
+               f'заказ: {order_items_string}\n'
                f'Общая сумма{cart.total_price}'
             )
             cart.delete()
+
 
             messages.success(request, "Ваш заказ успешно оформлен!")
 
