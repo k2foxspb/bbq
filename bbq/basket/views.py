@@ -2,7 +2,7 @@ import logging
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 
@@ -74,13 +74,14 @@ def add_to_cart(request, product_id):
         cart_item = CartItem.objects.create(product=product, cart=cart)
         cart_item.save()
     cart.update_total_price()
-    cart_count = request.session.get('cart_count', 0)
+    cart_items = cart.items.all()
+    cart_count = sum(item.quantity for item in cart_items)
     request.session['cart_count'] = cart_count + 1
 
     response = HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     response['cart-count'] = str(cart_count)  # Add the cart count to the response headers
 
-    return response
+    return JsonResponse({'cart-count': cart_count})
 
 
 def update_cart(request, product_id):
