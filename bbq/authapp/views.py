@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, LogoutView
+from django.contrib.sites.models import Site
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 from django.views.generic import CreateView, UpdateView, View, TemplateView
@@ -12,7 +13,6 @@ from authapp import forms
 from django.utils.encoding import force_bytes
 from django.core.mail import send_mail
 from django.shortcuts import redirect
-from django.contrib.sites.models import Site
 from django.contrib.messages.views import SuccessMessageMixin
 
 
