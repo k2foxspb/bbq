@@ -25,7 +25,7 @@
                                                      class="card-img-top img-fluid img-thumbnail"
                                                      style="height: 200px; object-fit: cover;">
                                             {% else %}
-                                                <img src="{% static 'img/no_image.png' %}" alt="Нет изображения"
+                                                <img src="{% static 'img/no-image.webp' %}" alt="Нет изображения"
                                                      class="card-img-top img-fluid img-thumbnail"
                                                      style="height: 200px; object-fit: cover;">
                                             {% endif %}
@@ -33,7 +33,9 @@
                                         <div class="card-body">
                                             <h5 class="card-title">{{ product.name }}</h5>
                                             <p class="card-text">{{ product.description|truncatechars:100 }}</p>
-                                            <p class="card-text">Цена: {{ product.price }} руб.</p>
+                                            <p class="card-text">Цена: {{ product.price }} руб.
+                                            <span style="color: #888; font-style: italic;">({{ product.grams }} г)</span>
+                                            </p>
                                             <form method="post" action="{% url 'basket:add_to_cart' product.id %}"
                                                   data-product-id="{{ product.id }}" class="add-to-cart-form">
                                                 {% csrf_token %}

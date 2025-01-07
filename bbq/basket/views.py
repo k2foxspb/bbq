@@ -2,7 +2,7 @@ import logging
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 
@@ -252,6 +252,8 @@ def checkout(request):
             messages.success(request, "Ваш заказ успешно оформлен!")
 
             return redirect('basket:success_guest')
+        else:
+            return HttpResponse(str(form.errors))
 
     return redirect('basket:show_checkout_form')
 
