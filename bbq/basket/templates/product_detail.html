@@ -12,7 +12,7 @@
                 <h2>{{ product.name }}</h2>
                 <p class="lead">{{ product.description }}</p>
                 <p><strong>Цена</strong> {{ product.price }}руб.
-                <span style="color: #888; font-style: italic;">({{ product.grams }} г)</span>
+                <span style="color: #888; font-style: italic;">({{ product.gram }} г)</span>
                 </p>
                 <!-- Add other details as needed -->
                 <a href="{% url 'basket:add_to_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
