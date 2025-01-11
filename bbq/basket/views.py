@@ -260,3 +260,7 @@ def checkout(request):
 
 def success_guest(request):
     return render(request, 'success_order.html')
+
+
+def about(request):
+    return render(request, 'about.html')

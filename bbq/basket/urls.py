@@ -19,4 +19,6 @@ urlpatterns = [
     path('show-checkout-form/', views.show_checkout_form, name='show_checkout_form'),  # Crucial
     # path('success/', views.success, name='success'),
     path('success_guest/', views.success_guest, name='success_guest'),
+    path('about/', views.about, name='about'),
+
 ]
