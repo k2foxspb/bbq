@@ -18,6 +18,8 @@
                         <div class="row">
                             {% for product in products_in_category %}
                                 <div itemscope itemtype="http://schema.org/Product" class="col-md-4 mb-4">
+                                     <meta itemprop="name" content="{{ product.name }}">
+                                    <meta itemprop="description" content="{{ product.description }}">
                                     <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                                         <meta itemprop="price" content="{{ product.price }}">
                                         <meta itemprop="priceCurrency" content="RUB">
