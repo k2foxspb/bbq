@@ -6,8 +6,10 @@
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="yandex-verification" content="f49a296cc9471a63" />
-
+    <meta name="yandex-verification" content="f49a296cc9471a63"/>
+    <meta name="description"
+          content='Сочный шашлык, приготовленный на настоящем мангале, из отборного мяса. Закажите доставку
+           или заберите самовывозом!  Быстро, вкусно, удобно!'/>
     <link type="image/x-icon" href="{% static 'img/logo/favicon.ico' %}" rel="shortcut icon">
     <link type="Image/x-icon" href="{% static 'img/logo/favicon.ico' %}" rel="icon">
     <title>{% block title %}Шашлычок{% endblock %}</title>
@@ -78,7 +80,9 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container fixed">
-        <a class="navbar-brand" href="{% url 'basket:product_list' %}"><img style="width: 10vw; min-width: 90px; max-width: 110px" src="{% static 'img/logo/favicon.ico' %}" alt="favicon"></a>
+        <a class="navbar-brand" href="{% url 'basket:product_list' %}"><img
+                style="width: 10vw; min-width: 90px; max-width: 110px" src="{% static 'img/logo/favicon.ico' %}"
+                alt="favicon"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
