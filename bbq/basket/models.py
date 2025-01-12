@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from authapp.models import CustomUser
 
@@ -23,6 +24,8 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    def get_absolute_url(self):
+        return reverse('basket:product_detail', kwargs={'product_id': self.pk})
 
 
 class Cart(models.Model):
