@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link type="image/x-icon" href="{% static 'img/logo/favicon.ico' %}" rel="shortcut icon">
     <link type="Image/x-icon" href="{% static 'img/logo/favicon.ico' %}" rel="icon">
     <title>{% block title %}Шашлычок{% endblock %}</title>
@@ -73,7 +74,7 @@
 </head>
 
 <body>
-
+Verification: 60dddae58145b1b5
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container fixed">
         <a class="navbar-brand" href="{% url 'basket:product_list' %}"><img style="width: 11vw" src="{% static 'img/logo/favicon.ico' %}" alt="favicon"></a>
