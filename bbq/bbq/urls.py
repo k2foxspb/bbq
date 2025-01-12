@@ -23,6 +23,7 @@ from bbq import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('basket.urls')),
+    path('robots\.txt', include('robots.urls')),
     # path('auth/', include('authapp.urls')),
 ]
 if settings.DEBUG:

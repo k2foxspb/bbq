@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     "crispy_forms",
     "crispy_bootstrap5",
+    'robots'
 
 ]
 
@@ -132,3 +133,7 @@ SITE_ID = 1
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+ROBOTS_SITEMAP_URLS = [
+    'https://onthefarm.ru/sitemap.xml',
+]
