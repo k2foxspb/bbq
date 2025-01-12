@@ -13,41 +13,51 @@
 
             {% if categories %}
                 {% for category, products_in_category in products_by_category.items %}
-                    <div class="category-container">
-                        <h2 style="text-align: center">{{ category.name }}</h2>
-                        <div class="row">
-                            {% for product in products_in_category %}
-                                <div class="col-md-4 mb-4">
-                                    <div  class="card ">
-                                        <a href="{% url 'basket:product_detail' product.id %}" class="btn btn-primary">
-                                            {% if product.image %}
-                                                <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                                                     class="card-img-top img-fluid img-thumbnail"
-                                                     style="height: 200px; object-fit: cover;">
-                                            {% else %}
-                                                <img src="{% static 'img/no-image.webp' %}" alt="Нет изображения"
-                                                     class="card-img-top img-fluid img-thumbnail"
-                                                     style="height: 200px; object-fit: cover;">
-                                            {% endif %}
-                                        </a>
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ product.name }}</h5>
-                                            <p class="card-text">{{ product.description|truncatechars:100 }}</p>
-                                            <p class="card-text">Цена: {{ product.price }} руб.
-                                            <span style="color: #888; font-style: italic;">({{ product.gram }} г)</span>
-                                            </p>
-                                            <form method="post" action="{% url 'basket:add_to_cart' product.id %}"
-                                                  data-product-id="{{ product.id }}" class="add-to-cart-form">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-primary">Добавить в корзину</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
+    <div class="category-container" itemscope itemtype="http://schema.org/Category">
+        <h2 style="text-align: center" itemprop="name">{{ category.name }}</h2>
+        <div class="row" itemscope itemtype="http://schema.org/ProductCollection">
+            {% for product in products_in_category %}
+                <div class="col-md-4 mb-4" itemprop="itemListElement" itemscope itemtype="http://schema.org/Product">
+                    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                        <meta itemprop="url" content="{% url 'basket:product_detail' product.id %}">
+                        <meta itemprop="price" content="{{ product.price }}">
+                        <meta itemprop="priceCurrency" content="RUB">
+                        <meta itemprop="availability" content="http://schema.org/InStock">
+                        <a href="{% url 'basket:product_detail' product.id %}" class="btn btn-primary" itemprop="url">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                     class="card-img-top img-fluid img-thumbnail"
+                                     style="height: 200px; object-fit: cover;" itemprop="image">
+                            {% else %}
+                                <img src="{% static 'img/no-image.webp' %}" alt="Нет изображения"
+                                     class="card-img-top img-fluid img-thumbnail"
+                                     style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title" itemprop="name">{{ product.name }}</h5>
+                            <p class="card-text" itemprop="description">{{ product.description|truncatechars:100 }}</p>
+                            <p class="card-text">
+                                Цена: <span itemprop="priceSpecification" itemscope itemtype="http://schema.org/UnitPriceSpecification">
+                                <meta itemprop="price" content="{{ product.price }}">
+                                <span itemprop="priceCurrency" content="RUB">{{ product.price }}</span> руб.
+                                </span>
+                                <span style="color: #888; font-style: italic;" itemprop="weight">({{ product.gram }} г)</span>
+                            </p>
+                            <form method="post" action="{% url 'basket:add_to_cart' product.id %}"
+                                  data-product-id="{{ product.id }}" class="add-to-cart-form" itemprop="action">
+                                <meta itemprop="actionType" content="http://schema.org/AddAction">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary" itemprop="name">Добавить в корзину</button>
+                            </form>
                         </div>
                     </div>
-                {% endfor %}
+                </div>
+                <meta itemprop="position" content="{{ forloop.counter }}">
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
             {% else %}
                 <p>Нет категорий товаров.</p>
             {% endif %}
