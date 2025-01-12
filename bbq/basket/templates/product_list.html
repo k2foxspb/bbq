@@ -46,7 +46,7 @@
                                                 <form method="post" action="{% url 'basket:add_to_cart' product.id %}"
                                                       data-product-id="{{ product.id }}" class="add-to-cart-form"
                                                       itemprop="action">
-                                                    <meta itemprop="actionType" content="http://schema.org/AddAction">
+                                                    <meta itemprop="actionType" content="http://schema.org/AddAction"/>
                                                     {% csrf_token %}
                                                     <button type="submit" class="btn btn-primary" itemprop="name">
                                                         Добавить в корзину
