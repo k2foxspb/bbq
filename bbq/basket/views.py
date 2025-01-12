@@ -264,3 +264,5 @@ def success_guest(request):
 
 def about(request):
     return render(request, 'about.html')
+def yandex(request):
+    return render(request, 'yandex_metrica.html')

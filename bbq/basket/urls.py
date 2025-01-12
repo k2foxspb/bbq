@@ -20,5 +20,5 @@ urlpatterns = [
     # path('success/', views.success, name='success'),
     path('success_guest/', views.success_guest, name='success_guest'),
     path('about/', views.about, name='about'),
-
+    path('yandex_f49a296cc9471a63', views.yandex, name='yandex_metrica'),
 ]
