@@ -5,96 +5,97 @@
         <div class="row">
             <h1 class="text-center">Все товары</h1>
 
-                <a class="basket" href="{% url 'basket:cart_detail' %}" id="cart-link">
-                    <img style="position: relative; top: 20%;" src="{% static 'img/basket-fill.svg' %}" alt="basket-fill">
-                    <div style="position: relative; top: -45%; left: 45%; font-family: 'Roboto', Arial, sans-serif; font-weight: bold">{{ cart_count }}</div>
-                </a>
+            <a class="basket" href="{% url 'basket:cart_detail' %}" id="cart-link">
+                <img style="position: relative; top: 20%;" src="{% static 'img/basket-fill.svg' %}" alt="basket-fill">
+                <div style="position: relative; top: -45%; left: 45%; font-family: 'Roboto', Arial, sans-serif; font-weight: bold">{{ cart_count }}</div>
+            </a>
 
 
             {% if categories %}
                 {% for category, products_in_category in products_by_category.items %}
-    <div class="category-container" itemscope itemtype="http://schema.org/Category">
-        <h2 style="text-align: center" itemprop="name">{{ category.name }}</h2>
-        <div class="row" itemscope itemtype="http://schema.org/ProductCollection">
-            {% for product in products_in_category %}
-                <div class="col-md-4 mb-4" itemprop="itemListElement" itemscope itemtype="http://schema.org/Product">
-                    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                        <meta itemprop="url" content="{% url 'basket:product_detail' product.id %}">
-                        <meta itemprop="price" content="{{ product.price }}">
-                        <meta itemprop="priceCurrency" content="RUB">
-                        <meta itemprop="availability" content="http://schema.org/InStock">
-                        <a href="{% url 'basket:product_detail' product.id %}" class="btn btn-primary" itemprop="url">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                                     class="card-img-top img-fluid img-thumbnail"
-                                     style="height: 200px; object-fit: cover;" itemprop="image">
-                            {% else %}
-                                <img src="{% static 'img/no-image.webp' %}" alt="Нет изображения"
-                                     class="card-img-top img-fluid img-thumbnail"
-                                     style="height: 200px; object-fit: cover;">
-                            {% endif %}
-                        </a>
-                        <div class="card-body">
-                            <h5 class="card-title" itemprop="name">{{ product.name }}</h5>
-                            <p class="card-text" itemprop="description">{{ product.description|truncatechars:100 }}</p>
-                            <p class="card-text">
-                                Цена: <span itemprop="priceSpecification" itemscope itemtype="http://schema.org/UnitPriceSpecification">
-                                <meta itemprop="price" content="{{ product.price }}">
-                                <span itemprop="priceCurrency" content="RUB">{{ product.price }}</span> руб.
-                                </span>
-                                <span style="color: #888; font-style: italic;" itemprop="weight">({{ product.gram }} г)</span>
-                            </p>
-                            <form method="post" action="{% url 'basket:add_to_cart' product.id %}"
-                                  data-product-id="{{ product.id }}" class="add-to-cart-form" itemprop="action">
-                                <meta itemprop="actionType" content="http://schema.org/AddAction">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary" itemprop="name">Добавить в корзину</button>
-                            </form>
+                    <div itemscope itemtype="http://schema.org/Category">
+                        <h2 itemprop="name">{{ category.name }}</h2>
+                        <div itemscope itemtype="http://schema.org/ProductCollection" itemprop="itemListElement">
+
+                            {% for product in products_in_category %}
+                                <div itemscope itemtype="http://schema.org/Product" itemprop="itemListElement" itemscope
+                                     itemtype="http://schema.org/Product">
+                                    <meta itemprop="position" content="{{ forloop.counter }}">
+                                    <a href="{% url 'basket:product_detail' product.id %}" itemprop="url">
+                                        {% if product.image %}
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                                 class="card-img-top img-fluid img-thumbnail"
+                                                 style="height: 200px; object-fit: cover;" itemprop="image">
+                                        {% else %}
+                                            <img src="{% static 'img/no-image.webp' %}" alt="Нет изображения"
+                                                 class="card-img-top img-fluid img-thumbnail"
+                                                 style="height: 200px; object-fit: cover;">
+                                        {% endif %}
+                                    </a>
+                                    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                                        <meta itemprop="url" content="{% url 'basket:product_detail' product.id %}">
+                                        <meta itemprop="price" content="{{ product.price }}">
+                                        <meta itemprop="priceCurrency" content="RUB">
+                                        <meta itemprop="availability" content="http://schema.org/InStock">
+
+
+                                        <div class="card-body">
+                                            <h5 itemprop="name">{{ product.name }}</h5>
+                                            <p itemprop="description">{{ product.description|truncatechars:100 }}</p>
+                                            <p class="card-text">
+                                                Цена: <span itemprop="price">{{ product.price }}</span> руб. <span
+                                                    itemprop="weight">({{ product.gram }} г)</span>
+                                            </p>
+                                            <form method="post" action="{% url 'basket:add_to_cart' product.id %}"
+                                                  class="add-to-cart-form">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-primary" itemprop="action">Добавить
+                                                    в корзину
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
-                </div>
-                <meta itemprop="position" content="{{ forloop.counter }}">
-            {% endfor %}
-        </div>
-    </div>
-{% endfor %}
+                {% endfor %}
             {% else %}
                 <p>Нет категорий товаров.</p>
             {% endif %}
         </div>
     </div>
     <script>
-    $(document).ready(function(xhr, status, error) {
-        $('.add-to-cart-form').submit(function(event) {
-            event.preventDefault();
-            const form = $(this);
-            const productId = form.data('product-id');
-            const url = form.attr('action');
+        $(document).ready(function (xhr, status, error) {
+            $('.add-to-cart-form').submit(function (event) {
+                event.preventDefault();
+                const form = $(this);
+                const productId = form.data('product-id');
+                const url = form.attr('action');
 
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: form.serialize(),
-                success: function(response) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(),
+                    success: function (response) {
 
-                    if (response && response['cart-count']) {
+                        if (response && response['cart-count']) {
 
-                        $("#cart-link div").text(response['cart-count']);
-                        $('#cart-link').data('cart-count', response['cart-count']);
+                            $("#cart-link div").text(response['cart-count']);
+                            $('#cart-link').data('cart-count', response['cart-count']);
 
+                        }
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Ошибка добавления в корзину:', error);
                     }
-
-
-
-                },
-                error: function(xhr, status, error) {
-                    console.error('Ошибка добавления в корзину:', error);
-                }
+                });
             });
+
+
         });
 
-
-    });
-
-</script>
+    </script>
 {% endblock %}
