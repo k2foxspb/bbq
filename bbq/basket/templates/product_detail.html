@@ -2,6 +2,10 @@
 {% load static %}
 
 {% block content %}
+    <a class="basket" href="{% url 'basket:cart_detail' %}" id="cart-link">
+        <img style="position: relative; top: 20%;" src="{% static 'img/basket-fill.svg' %}" alt="basket-fill">
+        <div style="position: relative; top: -45%; left: 45%; font-family: 'Roboto', Arial, sans-serif; font-weight: bold">{{ cart_count }}</div>
+    </a>
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -12,11 +16,52 @@
                 <h2>{{ product.name }}</h2>
                 <p class="lead">{{ product.description }}</p>
                 <p><strong>Цена</strong> {{ product.price }}руб.
-                <span style="color: #888; font-style: italic;">({{ product.gram }} г)</span>
+                    <span style="color: #888; font-style: italic;">({{ product.gram }} г)</span>
                 </p>
                 <!-- Add other details as needed -->
-                <a href="{% url 'basket:add_to_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
+                <form method="post" action="{% url 'basket:add_to_cart' product.id %}"
+                      data-product-id="{{ product.id }}" class="add-to-cart-form"
+                      itemprop="action">
+
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" itemprop="name">
+                        Добавить в корзину
+                    </button>
+                </form>
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function (xhr, status, error) {
+            $('.add-to-cart-form').submit(function (event) {
+                event.preventDefault();
+                const form = $(this);
+                const productId = form.data('product-id');
+                const url = form.attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(),
+                    success: function (response) {
+
+                        if (response && response['cart-count']) {
+
+                            $("#cart-link div").text(response['cart-count']);
+                            $('#cart-link').data('cart-count', response['cart-count']);
+
+                        }
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Ошибка добавления в корзину:', error);
+                    }
+                });
+            });
+
+
+        });
+
+    </script>
 {% endblock %}

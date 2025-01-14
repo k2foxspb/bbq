@@ -4,13 +4,10 @@
     <div class="container">
         <div class="row">
             <h1 class="text-center">Все товары</h1>
-
             <a class="basket" href="{% url 'basket:cart_detail' %}" id="cart-link">
                 <img style="position: relative; top: 20%;" src="{% static 'img/basket-fill.svg' %}" alt="basket-fill">
                 <div style="position: relative; top: -45%; left: 45%; font-family: 'Roboto', Arial, sans-serif; font-weight: bold">{{ cart_count }}</div>
             </a>
-
-
             {% if categories %}
                 {% for category, products_in_category in products_by_category.items %}
                     <div class="category-container">
@@ -18,9 +15,9 @@
                         <div class="row">
                             {% for product in products_in_category %}
                                 <div itemscope itemtype="http://schema.org/Product" class="col-md-4 mb-4">
-                                     <meta itemprop="name" content="{{ product.name }}">
+                                    <meta itemprop="name" content="{{ product.name }}">
                                     <meta itemprop="description" content="{{ product.description }}">
-                                <meta itemprop="weight" content="{{ product.gram }}">
+                                    <meta itemprop="weight" content="{{ product.gram }}">
 
                                     <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                                         <meta itemprop="price" content="{{ product.price }}">
@@ -41,8 +38,8 @@
                                                 {% endif %}
                                             </a>
                                             <div class="card-body">
-                                                <h5 itemprop="name">{{ product.name }}</h5>
-                                                <p itemprop="description">{{ product.description }}</p>
+                                                <h5>{{ product.name }}</h5>
+                                                <p>{{ product.description }}</p>
                                                 <p>
                                                     Цена: <span itemprop="price">{{ product.price }}</span> руб.
                                                     <span>({{ product.gram }} г)</span>
@@ -50,9 +47,8 @@
                                                 <form method="post" action="{% url 'basket:add_to_cart' product.id %}"
                                                       data-product-id="{{ product.id }}" class="add-to-cart-form"
                                                       itemprop="action">
-
                                                     {% csrf_token %}
-                                                    <button type="submit" class="btn btn-primary" itemprop="name">
+                                                    <button type="submit" class="btn btn-primary">
                                                         Добавить в корзину
                                                     </button>
                                                 </form>
