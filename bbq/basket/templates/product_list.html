@@ -3,6 +3,11 @@
 {% block content %}
     <div class="container">
         <div class="row">
+        <div style="text-align: center;">
+            <img
+                style=" width: 10vw; min-width: 120px; max-width: 110px" src="{% static 'img/logo/1111.webp' %}"
+                alt="favicon">
+        </div>
             <h1 class="text-center"style="font-size: 50px">Шашлычок</h1>
             <a class="basket" href="{% url 'basket:cart_detail' %}" id="cart-link">
                 <img style="position: relative; top: 20%;" src="{% static 'img/basket-fill.svg' %}" alt="basket-fill">
@@ -63,7 +68,7 @@
             {% else %}
                 <p>Нет категорий товаров.</p>
             {% endif %}
-        </div>
+        </>
     </div>
     <script>
         $(document).ready(function (xhr, status, error) {
