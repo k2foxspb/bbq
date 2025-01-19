@@ -21,5 +21,5 @@ class OrderForm(forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = ['shipping_address', 'phone_number', 'message', 'name']
+        fields = ['name', 'shipping_address', 'phone_number', 'message']
         widgets = {'cart': forms.HiddenInput()}

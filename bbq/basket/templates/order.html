@@ -5,14 +5,17 @@
 {% block content %}
 
     <form method="post" action="{% url 'basket:checkout' %}">
+    <div class="order-form">
         {% csrf_token %}
-   {{ form.as_p }}
-     {% if request.session.cart_id %}
+        {{ form.as_p }}
+
+        {% if request.session.cart_id %}
             <input type="hidden" name="cart" value="{{ request.session.cart_id }}">
         {% else %}
             <p>Error: No cart found. Please add items to your cart first.</p>
         {% endif %}
-    <p> Нажимая кнопку 'подтвердить заказ' вы соглашаетесь на обработку ваших данных</p>
-    <button type="submit">Подтвердить заказ</button>
-</form>
+        <p> Нажимая кнопку 'подтвердить заказ' вы соглашаетесь на обработку ваших данных</p>
+        <button type="submit">Подтвердить заказ</button>
+    </div>
+    </form>
 {% endblock %}
