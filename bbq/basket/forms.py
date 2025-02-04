@@ -4,7 +4,7 @@ from .models import Order
 import phonenumbers  # Import phonenumbers here
 
 class OrderForm(forms.ModelForm):
-    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя'}))
+    # name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя'}))
     shipping_address = forms.CharField(max_length=255, required=True, widget=forms.TextInput(attrs={'placeholder': 'Адрес доставки'}))
     phone_number = PhoneNumberField(region="RU")
     message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Дополнительная информация'}), required=False)
@@ -21,5 +21,5 @@ class OrderForm(forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = ['name', 'shipping_address', 'phone_number', 'message']
+        fields = ['shipping_address', 'phone_number', 'message']
         widgets = {'cart': forms.HiddenInput()}

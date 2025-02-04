@@ -225,7 +225,7 @@ def checkout(request):
             )
             order = form.save(commit=False)
 
-            order.user = cleaned_data.get('name', '').strip()
+            # order.user = cleaned_data.get('name', '').strip()
             order.products = ord  # Assign cart to Order
 
             order.shipping_address = cleaned_data.get('shipping_address', '').strip()
