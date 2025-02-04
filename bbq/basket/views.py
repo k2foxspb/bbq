@@ -238,7 +238,7 @@ def checkout(request):
                 order.save()
             except Exception as e: print(e)
             send_message(
-               f'Имя: {order.user}\n'
+
                f'Номер заказа: {order.pk}\n '
                f'Телефон: {order.phone_number}\n'
                f'Адрес: {order.shipping_address}\n'
