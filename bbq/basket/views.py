@@ -229,7 +229,7 @@ def checkout(request):
             order.products = ord  # Assign cart to Order
 
             order.shipping_address = cleaned_data.get('shipping_address', '').strip()
-            order.phone_number = cleaned_data.get('phone_number', '').strip()
+            order.phone_number = cleaned_data.get('phone_number', '')
             order.message = cleaned_data.get('message', '').strip()
             order.total_price = cart.total_price
             order.status = 'Ожидается'  # Initialize status
