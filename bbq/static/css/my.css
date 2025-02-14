@@ -32,3 +32,15 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+.product-grid {
+       display: grid;
+       grid-template-columns: repeat(5, 1fr);
+       grid-gap: 10px;
+   }
+@media (max-width: 768px) {
+   .product-grid {
+       grid-template-columns: repeat(2, 1fr);
+   }
+
+}

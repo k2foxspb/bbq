@@ -1,25 +1,35 @@
 {% extends 'base_basket.html' %}
 {% load static %}
 {% block content %}
-    <div class="container">
+    <div class="">
         <div class="row">
-        <div style="text-align: center;">
-            <img
-                style=" width: 10vw; min-width: 120px; max-width: 110px" src="{% static 'img/logo/1111.webp' %}"
-                alt="favicon">
-        </div>
-            <h1 class="text-center"style="font-size: 50px">Шашлычок</h1>
+            <div style="text-align: center;">
+                <img
+                        style=" width: 10vw; min-width: 120px; max-width: 110px" src="{% static 'img/logo/1111.webp' %}"
+                        alt="favicon">
+            </div>
+            <h1 class="text-center" style="font-size: 50px">Шашлычок</h1>
             <a class="basket" href="{% url 'basket:cart_detail' %}" id="cart-link">
                 <img style="position: relative; top: 20%;" src="{% static 'img/basket-fill.svg' %}" alt="basket-fill">
                 <div style="position: relative; top: -45%; left: 45%; font-family: 'Roboto', Arial, sans-serif; font-weight: bold">{{ cart_count }}</div>
             </a>
-            {% if categories %}
-                {% for category, products_in_category in products_by_category.items %}
-                    <div class="category-container">
-                        <h2 style="text-align: center">{{ category.name }}</h2>
-                        <div class="row">
-                            {% for product in products_in_category %}
-                                <div itemscope itemtype="http://schema.org/Product" class="col-md-4 mb-4">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="nav nav-pills justify-content-center">  <!-- Горизонтальное меню категорий -->
+                        {% for category in categories %}
+                            <a class="nav-link"
+                               href="{% url 'basket:category_detail' category.slug %}">{{ category.name }}</a>
+                        {% endfor %}
+                    </nav>
+                </div>
+            </div>
+            {% if products_by_category %}
+                {% for category, products in products_by_category.items %}
+
+                        <h2>{{ category.name }}</h2>
+                        <div class="product-grid">
+                            {% for product in products %}
+                                <div itemscope itemtype="http://schema.org/Product">
                                     <meta itemprop="name" content="{{ product.name }}">
                                     <meta itemprop="description" content="{{ product.description }}">
                                     <meta itemprop="weight" content="{{ product.gram }}">
@@ -35,11 +45,11 @@
                                                 {% if product.image %}
                                                     <img src="{{ product.image.url }}" alt="{{ product.name }}"
                                                          class="card-img-top img-fluid img-thumbnail"
-                                                         style="height: 200px; object-fit: cover;" itemprop="image">
+                                                          itemprop="image">
                                                 {% else %}
                                                     <img src="{% static 'img/no-image.webp' %}" alt="Нет изображения"
                                                          class="card-img-top img-fluid img-thumbnail"
-                                                         style="height: 200px; object-fit: cover;">
+                                                         >
                                                 {% endif %}
                                             </a>
                                             <div class="card-body">
@@ -63,12 +73,12 @@
                                 </div>
                             {% endfor %}
                         </div>
-                    </div>
+
                 {% endfor %}
             {% else %}
                 <p>Нет категорий товаров.</p>
             {% endif %}
-        </>
+        </div>
     </div>
     <script>
         $(document).ready(function (xhr, status, error) {

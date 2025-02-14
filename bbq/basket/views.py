@@ -2,7 +2,7 @@ import logging
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 
@@ -15,7 +15,11 @@ def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     return render(request, 'product_detail.html', {'product': product})
 
-
+def category_detail(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = category.products.all()  # Получаем все продукты, связанные с этой категорией
+    context = {'category': category, 'products': products, 'categories': Category.objects.all()}
+    return render(request, 'category_detail.html', context)
 def product_list(request):
     categories = Category.objects.all()  # Fetch all categories
     products = Product.objects.all()  # Fetch all products

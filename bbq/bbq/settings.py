@@ -84,7 +84,6 @@ WSGI_APPLICATION = 'bbq.wsgi.application'
 
 DATABASES = {
     "default": env.db(),
-
 }
 
 # Password validation

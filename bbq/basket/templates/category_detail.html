@@ -1,0 +1,100 @@
+{% extends 'base_basket.html' %}
+{% load static %}
+
+{% block content %}
+    <div style="text-align: center;">
+        <img
+                style=" width: 10vw; min-width: 120px; max-width: 110px" src="{% static 'img/logo/1111.webp' %}"
+                alt="favicon">
+    </div>
+    <h1 class="text-center" style="font-size: 50px">Шашлычок</h1>
+    <a class="basket" href="{% url 'basket:cart_detail' %}" id="cart-link">
+        <img style="position: relative; top: 20%;" src="{% static 'img/basket-fill.svg' %}" alt="basket-fill">
+        <div style="position: relative; top: -45%; left: 45%; font-family: 'Roboto', Arial, sans-serif; font-weight: bold">{{ cart_count }}</div>
+    </a>
+    <div class="row">
+        <div class="col-12">
+            <nav class="nav nav-pills justify-content-center">  <!-- Горизонтальное меню категорий -->
+                {% for category in categories%}
+                    <a class="nav-link"
+                       href="{% url 'basket:category_detail' category.slug %}">{{ category.name }}</a>
+                {% endfor %}
+            </nav>
+        </div>
+    </div>
+    <h1>{{ category.name }}</h1>
+    <div class="product-grid">
+        {% for product in products %}
+            <div itemscope itemtype="http://schema.org/Product">
+                <meta itemprop="name" content="{{ product.name }}">
+                <meta itemprop="description" content="{{ product.description }}">
+                <meta itemprop="weight" content="{{ product.gram }}">
+
+                <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                    <meta itemprop="price" content="{{ product.price }}">
+                    <meta itemprop="priceCurrency" content="RUB">
+                    <meta itemprop="availability" content="http://schema.org/InStock">
+                    <link itemprop="url" href="{% url 'basket:product_detail' product.id %}"/>
+
+                    <div class="card">
+                        <a href="{% url 'basket:product_detail' product.id %}" itemprop="url">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                     class="card-img-top img-fluid img-thumbnail">
+                            {% else %}
+                                <img src="{% static 'img/no-image.webp' %}" alt="Нет изображения"
+                                     class="card-img-top img-fluid img-thumbnail">
+                            {% endif %}
+                        </a>
+                        <div class="card-body">
+                            <h5>{{ product.name }}</h5>
+                            <p>{{ product.description }}</p>
+                            <p>Цена: <span itemprop="price">{{ product.price }}</span> руб. ({{ product.gram }} г)</p>
+                            <form method="post" action="{% url 'basket:add_to_cart' product.id %}"
+                                  data-product-id="{{ product.id }}" class="add-to-cart-form" itemprop="action">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% if not products %}
+        <p>В этой категории пока нет товаров.</p>
+    {% endif %}
+    <script>
+        $(document).ready(function (xhr, status, error) {
+            $('.add-to-cart-form').submit(function (event) {
+                event.preventDefault();
+                const form = $(this);
+                const productId = form.data('product-id');
+                const url = form.attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(),
+                    success: function (response) {
+
+                        if (response && response['cart-count']) {
+
+                            $("#cart-link div").text(response['cart-count']);
+                            $('#cart-link').data('cart-count', response['cart-count']);
+
+                        }
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Ошибка добавления в корзину:', error);
+                    }
+                });
+            });
+
+
+        });
+
+    </script>
+{% endblock %}
