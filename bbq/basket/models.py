@@ -1,17 +1,37 @@
+from uuid import uuid4
+
 from django.db import models
 from django.urls import reverse
+from pytils.translit import slugify
 
 from authapp.models import CustomUser
 
 
 # Import User model
+def unique_slugify(instance, slug):
+    """
+    Генератор уникальных SLUG для моделей, в случае существования такого SLUG.
+    """
+    model = instance.__class__
+    unique_slug = slugify(slug)
+    while model.objects.filter(slug=unique_slug).exists():
+        unique_slug = f'{unique_slug}-{uuid4().hex[:8]}'
+    return unique_slug
+
+
 
 class Category(models.Model):
-    name = models.CharField(max_length=50)
-    slug = models.SlugField(max_length=50, unique=True, default=True)
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=50, unique=True,blank=True,)
     def __str__(self):
         return self.name
-
+    def save(self, *args, **kwargs):
+        """
+        Сохранение полей модели при их отсутствии заполнения
+        """
+        if not self.slug:
+            self.slug = unique_slugify(self, self.name)
+        super().save(*args, **kwargs)
 
 
 
