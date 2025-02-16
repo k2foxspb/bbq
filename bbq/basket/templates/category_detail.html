@@ -15,14 +15,16 @@
     <div class="row">
         <div class="col-12">
             <nav class="nav nav-pills justify-content-center">  <!-- Горизонтальное меню категорий -->
-                {% for category in categories%}
-                    <a class="nav-link"
-                       href="{% url 'basket:category_detail' category.slug %}">{{ category.name }}</a>
+                {% for category in categories %}
+                    {% if category.slug != current_category.slug %}
+                        <a class="nav-link"
+                           href="{% url 'basket:category_detail' category.slug %}">{{ category.name }}</a>
+                    {% endif %}
                 {% endfor %}
             </nav>
         </div>
     </div>
-    <h1>{{ category.name }}</h1>
+    <h1 style="text-align: center">{{ category.name }}</h1>
     <div class="product-grid">
         {% for product in products %}
             <div itemscope itemtype="http://schema.org/Product">
@@ -40,7 +42,8 @@
                         <a href="{% url 'basket:product_detail' product.id %}" itemprop="url">
                             {% if product.image %}
                                 <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                                     class="card-img-top img-fluid img-thumbnail">
+                                     class="card-img-top img-fluid img-thumbnail"
+                                     style="height: 200px; object-fit: cover">
                             {% else %}
                                 <img src="{% static 'img/no-image.webp' %}" alt="Нет изображения"
                                      class="card-img-top img-fluid img-thumbnail">

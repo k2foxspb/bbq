@@ -36,11 +36,13 @@
 .product-grid {
        display: grid;
        grid-template-columns: repeat(5, 1fr);
-       grid-gap: 10px;
+       grid-gap: 5px;
    }
 @media (max-width: 768px) {
    .product-grid {
        grid-template-columns: repeat(2, 1fr);
+       height: 15vw
    }
+
 
 }

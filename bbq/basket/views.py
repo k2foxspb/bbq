@@ -18,7 +18,8 @@ def product_detail(request, product_id):
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     products = category.products.all()  # Получаем все продукты, связанные с этой категорией
-    context = {'category': category, 'products': products, 'categories': Category.objects.all()}
+    current_category = get_object_or_404(Category, slug=slug)
+    context = {'category': category, 'products': products, 'categories': Category.objects.all(), 'current_category': current_category}
     return render(request, 'category_detail.html', context)
 def product_list(request):
     categories = Category.objects.all()  # Fetch all categories
