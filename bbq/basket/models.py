@@ -21,10 +21,11 @@ def unique_slugify(instance, slug):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50, blank=False, null=False)
+    name = models.CharField(max_length=50, blank=False, null=False, unique=True)
     slug = models.SlugField(max_length=50,blank=True,null=False)
     def __str__(self):
         return self.name
+
     def save(self, *args, **kwargs):
         """
         Сохранение полей модели при их отсутствии заполнения
