@@ -3,29 +3,20 @@
 {% block content %}
     <div class="">
         <div class="row">
-            <div style="text-align: center;">
-                <img
-                        style=" width: 10vw; min-width: 120px; max-width: 300px" src="{% static 'img/logo/1111.webp' %}"
-                        alt="favicon">
-            </div>
-            <h1 class="text-center" style="font-size: 50px">Шашлычок</h1>
+
+
             <a class="basket" href="{% url 'basket:cart_detail' %}" id="cart-link">
                 <img style="position: relative; top: 20%;" src="{% static 'img/basket-fill.svg' %}" alt="basket-fill">
                 <div style="position: relative; top: -45%; left: 45%; font-family: 'Roboto', Arial, sans-serif; font-weight: bold">{{ cart_count }}</div>
             </a>
-            <div style="margin-top: 20px; text-align: center;
-    font-style: italic;">
-                <p>Проспект Александровской Фермы, 8литА</p>
-                <p>Телефон: +7 (981) 707-03-06</p>
-                <p><a href="{% url 'basket:about' %}">Доставка</a></p>
-            </div>
+
             <div class="row">
                 <div class="col-12">
                     <nav class="nav nav-pills justify-content-center">  <!-- Горизонтальное меню категорий -->
                         {% for category in categories %}
                             {% if category.slug != current_category.slug %}
-                            <a class="nav-link"
-                               href="{% url 'basket:category_detail' category.slug %}">{{ category.name }}</a>
+                                <a class="nav-link"
+                                   href="{% url 'basket:category_detail' category.slug %}">{{ category.name }}</a>
                             {% endif %}
                         {% endfor %}
                     </nav>
@@ -37,7 +28,7 @@
                     <h2 style="text-align: center">{{ category.name }}</h2>
                     <div class="product-grid">
                         {% for product in products %}
-                            <div itemscope itemtype="http://schema.org/Product" >
+                            <div itemscope itemtype="http://schema.org/Product">
                                 <meta itemprop="name" content="{{ product.name }}">
                                 <meta itemprop="description" content="{{ product.description }}">
                                 <meta itemprop="weight" content="{{ product.gram }}">
