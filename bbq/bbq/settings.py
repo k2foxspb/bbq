@@ -44,12 +44,26 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     'robots',
-    "django.contrib.sitemaps"
-
+    "django.contrib.sitemaps",
+    'rest_framework',
+    'api',
+    "corsheaders",
 ]
+
+# REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -138,4 +152,36 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 ROBOTS_SITEMAP_URLS = [
     'https://onthefarm.ru/sitemap.xml',
+]
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:19006',  # Expo development server
+    'http://127.0.0.1:19006',  # Alternative Expo development server
+    'http://localhost:8083',  # Django development server
+    'http://127.0.0.1:8000',  # Alternative Django development server
+    'https://onthefarm.ru',  # Production server
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
 ]

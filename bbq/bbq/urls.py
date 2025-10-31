@@ -33,6 +33,7 @@ urlpatterns = [
     path('robots.txt', include('robots.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     # path('auth/', include('authapp.urls')),
+    path('api/', include('api.urls')),
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Always serve media files through Django (not recommended for production, but works for now)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
