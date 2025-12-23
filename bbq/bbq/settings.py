@@ -60,11 +60,25 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ],
 }
-
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:19006',  # Expo development server
+    'http://127.0.0.1:19006',  # Alternative Expo development server
+    'http://localhost:8083',  # Django development server
+    'http://127.0.0.1:8000',  # Alternative Django development server
+    'https://onthefarm.ru',  # Production server
+]
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:19006',
+    'http://127.0.0.1:19006',
+    'http://localhost:8083',
+    'http://127.0.0.1:8000',
+    'https://onthefarm.ru',
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
